@@ -1,0 +1,161 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 0,
+    "passes": 0,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-06-29T08:05:14.497Z",
+    "end": "2025-06-29T08:06:44.876Z",
+    "duration": 90379,
+    "testsRegistered": 2,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 1,
+    "hasOther": true,
+    "skipped": 2,
+    "hasSkipped": true
+  },
+  "results": [
+    {
+      "uuid": "60327f47-d866-4c3d-a135-21256bdf2e78",
+      "title": "",
+      "fullFile": "D:\\Tugas Sesi 11\\test\\tugas-sesi-11.js",
+      "file": "\\test\\tugas-sesi-11.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "188e8e6c-d080-4951-bff4-57180dc6bc56",
+          "title": "Saucedemo POM + Visual Test",
+          "fullFile": "D:\\Tugas Sesi 11\\test\\tugas-sesi-11.js",
+          "file": "\\test\\tugas-sesi-11.js",
+          "beforeHooks": [
+            {
+              "title": "\"before each\" hook for \"Visit SauceDemo, login, cek logo, urutkan produk\"",
+              "fullTitle": "Saucedemo POM + Visual Test \"before each\" hook for \"Visit SauceDemo, login, cek logo, urutkan produk\"",
+              "timedOut": true,
+              "duration": 90359,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "const options = new Options();\noptions.addArguments('--headless');\ndriver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();\nloginPage = new LoginPage(driver);\ninventoryPage = new InventoryPage(driver);",
+              "err": {
+                "message": "Error: Timeout of 90000ms exceeded. For async tests and hooks, ensure \"done()\" is called; if returning a Promise, ensure it resolves. (D:\\Tugas Sesi 11\\test\\tugas-sesi-11.js)",
+                "estack": "Error: Timeout of 90000ms exceeded. For async tests and hooks, ensure \"done()\" is called; if returning a Promise, ensure it resolves. (D:\\Tugas Sesi 11\\test\\tugas-sesi-11.js)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)",
+                "diff": null
+              },
+              "uuid": "99a48b99-997c-4897-9d5d-24f332015f6a",
+              "parentUUID": "188e8e6c-d080-4951-bff4-57180dc6bc56",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "afterHooks": [
+            {
+              "title": "\"after each\" hook in \"Saucedemo POM + Visual Test\"",
+              "fullTitle": "Saucedemo POM + Visual Test \"after each\" hook in \"Saucedemo POM + Visual Test\"",
+              "timedOut": false,
+              "duration": 1,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "if (driver) {\n  await driver.quit();\n}",
+              "err": {},
+              "uuid": "660e6410-7ddc-4b94-8e49-5d53bef61995",
+              "parentUUID": "188e8e6c-d080-4951-bff4-57180dc6bc56",
+              "isHook": true,
+              "skipped": false
+            }
+          ],
+          "tests": [
+            {
+              "title": "Visit SauceDemo, login, cek logo, urutkan produk",
+              "fullTitle": "Saucedemo POM + Visual Test Visit SauceDemo, login, cek logo, urutkan produk",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "await driver.get('https://www.saucedemo.com');\nconst title = await driver.getTitle();\nassert.strictEqual(title, 'Swag Labs');\nawait loginPage.login('standard_user', 'secret_sauce');\nconst buttonCart = await driver.wait(\n  until.elementLocated(By.css('[data-test=\"shopping-cart-link\"]')),\n  10000\n);\nassert.ok(await buttonCart.isDisplayed());\nconst logoText = await inventoryPage.getAppLogoText();\nassert.strictEqual(logoText, 'Swag Labs');\nawait inventoryPage.sortProductsAZ();\nconsole.log('Urutkan produk berhasil.');",
+              "err": {},
+              "uuid": "ec94f38d-4d7f-498a-8998-be00c77cfb37",
+              "parentUUID": "188e8e6c-d080-4951-bff4-57180dc6bc56",
+              "isHook": false,
+              "skipped": true
+            },
+            {
+              "title": "Visual Testing halaman login",
+              "fullTitle": "Saucedemo POM + Visual Test Visual Testing halaman login",
+              "timedOut": false,
+              "duration": 0,
+              "state": null,
+              "speed": null,
+              "pass": false,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "await driver.get('https://www.saucedemo.com');\nconst screenshot = await driver.takeScreenshot();\nif (!fs.existsSync('./screenshots')) {\n  fs.mkdirSync('./screenshots');\n}\nfs.writeFileSync('./screenshots/current.png', Buffer.from(screenshot, 'base64'));\nif (!fs.existsSync('./screenshots/baseline.png')) {\n  fs.copyFileSync('./screenshots/current.png', './screenshots/baseline.png');\n  console.log('Baseline image dibuat.');\n}\nconst img1 = PNG.sync.read(fs.readFileSync('./screenshots/baseline.png'));\nconst img2 = PNG.sync.read(fs.readFileSync('./screenshots/current.png'));\nconst { width, height } = img1;\nconst diff = new PNG({ width, height });\nconst numDiffPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, {\n  threshold: 0.1,\n});\nfs.writeFileSync('./screenshots/diff.png', PNG.sync.write(diff));\nassert.strictEqual(numDiffPixels, 0, `Ada perbedaan visual: ${numDiffPixels} piksel`);",
+              "err": {},
+              "uuid": "a5430a24-d3a9-4b85-ad0b-9582dc0d6e5d",
+              "parentUUID": "188e8e6c-d080-4951-bff4-57180dc6bc56",
+              "isHook": false,
+              "skipped": true
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [
+            "ec94f38d-4d7f-498a-8998-be00c77cfb37",
+            "a5430a24-d3a9-4b85-ad0b-9582dc0d6e5d"
+          ],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 90000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 90000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "11.7.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.2.0"
+    }
+  }
+}
